@@ -1,0 +1,43 @@
+# syntax=docker/dockerfile:1
+
+FROM continuumio/miniconda3
+
+COPY . /gui_flask
+WORKDIR /gui_flask
+
+ENV REDIS_URL = redis_server
+
+#ADD streamlit_entrypoint.sh /
+
+# attempt to allow user acess to entrypoint
+#RUN ["chmod", "u+x", "./streamlit_entrypoint.sh"]
+
+RUN pip install --upgrade pip
+RUN pip install streamlit
+RUN pip install matplotlib
+RUN pip install bokeh==2.4.3
+RUN pip install requests
+
+
+
+RUN pip install flask
+RUN pip install flask_sqlalchemy
+RUN pip install flask_migrate
+RUN pip install flask_login
+RUN pip install flask_mail
+RUN pip install flask_wtf
+RUN pip install flask_cors
+RUN pip install bp
+
+# disables lag in stdout/stderr output
+#ENV PYTHONUNBUFFERED 1
+#ENV PYTHONDONTWRITEBYTECODE 1
+# Path
+#ENV PATH="/opt/venv/bin:$PATH"
+
+EXPOSE 8501
+
+#RUN ["cd", "gui"]
+
+# The code to run when container is started:
+CMD ["streamlit", "run", "streamlit_vis.py"]

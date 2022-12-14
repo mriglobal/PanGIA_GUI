@@ -1,0 +1,19 @@
+# syntax=docker/dockerfile:1
+
+FROM athomasmriglobal/pangia:latest
+
+COPY . /gui_flask
+WORKDIR /gui_flask
+
+ENV REDIS_URL = redis_server
+
+RUN echo "conda activate gui" >> ~/.bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+
+ADD entrypoint.sh /
+
+RUN ["chmod", "u+x", "./entrypoint.sh"]
+
+EXPOSE 5000
+
+ENTRYPOINT ["./entrypoint.sh"]

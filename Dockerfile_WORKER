@@ -1,0 +1,15 @@
+FROM athomasmriglobal/pangia:latest
+
+COPY . /gui_flask
+WORKDIR /gui_flask
+
+ENV REDIS_URL = redis_server
+
+RUN echo "conda activate gui" >> ~/.bashrc
+SHELL ["/bin/bash", "--login", "-c"]
+
+ADD worker_entrypoint.sh /
+
+RUN ["chmod", "u+x", "./worker_entrypoint.sh"]
+
+ENTRYPOINT ["./worker_entrypoint.sh"]

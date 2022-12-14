@@ -1,0 +1,98 @@
+version: "3.7"
+
+services:
+
+  app:
+
+    build:
+
+      dockerfile: Dockerfile_GUI
+      context: .
+
+    image: "athomasmriglobal/pangia:latest"
+
+    container_name: flask_app_gui
+
+    environment:
+
+      REDIS_URL: redis://redis_server:6379/0 pangia-tasks
+
+    ports:
+
+      - "5000:5000"
+
+    volumes:
+
+      - .:/gui_flask
+      - pangia:/home/node/app
+
+    restart: unless-stopped
+
+  rq-worker:
+
+    build:
+
+      dockerfile: Dockerfile_WORKER
+      context: .
+
+    container_name: rq_worker_pangia_tasks
+
+    #command: rq worker -u redis://redis_server:6379
+
+    volumes: 
+
+      - .:/gui_flask
+      - pangia:/home/node/app
+
+    restart: unless-stopped
+
+  redis:
+
+    build:
+
+      dockerfile: Dockerfile_REDIS
+      context: ./PanGIA
+
+    image: "redis"
+
+    container_name: redis_server
+
+    environment:
+
+      REDIS_URL: redis://redis_server:6379/0 pangia-tasks
+
+    restart: unless-stopped
+
+    ports:
+
+      - "6379:6379"
+
+    volumes:
+
+      - .:/gui_flask
+
+  streamlit:
+
+    build:
+
+        dockerfile: Dockerfile_STREAMLIT
+        context: .
+
+    image: "continuumio/miniconda3"
+
+    container_name: streamlit_iframe
+
+    ports:
+
+      - "8501:8501"
+
+    volumes:
+
+      - .:/gui_flask
+      - pangia:/home/node/app
+
+volumes:
+
+  pangia:
+
+

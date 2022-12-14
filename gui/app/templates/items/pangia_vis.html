@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/css/bootstrap.css" rel="stylesheet"/>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.0.0-alpha/js/bootstrap.min.js"></script>
+<link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+
+<script>
+    var range = document.querySelector('.range');
+
+    var field = document.getElementById('raw_rd_count_val');
+    var min_linear_cov_val = document.getElementById('min_linear_cov_val');
+    var min_score_val = document.getElementById('min_score_val');
+
+    var min_norm_rd_cnt_combo_val = document.getElementById('min_norm_rd_cnt_combo_val');
+    var min_depth_cov_val = document.getElementById('min_depth_cov_val');
+    var rankspec_min_depth_cov_val = document.getElementById('rankspec_min_depth_cov_val');
+
+    range.addEventListener('input', function (e) {
+    field.value = e.target.value;
+    });
+    field.addEventListener('input', function (e) {
+    range.value = e.target.value;
+    });
+</script>
+
+<script>
+  $(function() {
+    $('input:checkbox').change(function() {
+      $('#console-event').html('Toggle: ' + $(this).prop('checked'))
+    })
+  })
+
+</script>
+
+<input id="patho" type="checkbox" data-toggle="toggle">
+<input id="chk2" type="checkbox" data-toggle="toggle">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static',filename='css/pangia_vis_style.css') }}" />
+    <title>PanGIA Visualization</title>
+
+    <style>
+        .wrapper {
+            background-color: whitesmoke;
+            list-style-type: none;
+            border-radius: 5px;
+            margin: 5em;
+            }
+        .form-row {
+            display: flex;
+            flex-flow: row-reverse;
+            margin: .5em;
+            }
+        .form-row > label {
+            flex: 1;
+            margin: .5em 1em .5em 0;
+            }
+        .form-row > input {
+            flex: 2;
+            margin: .5em;
+            }
+
+    </style>
+
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ category }} alert-dismissible" role="alert">
+		            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <b> {{ message }} </b>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    <label> <br/> <br/> </label>
+
+    {{ js_resources|indent(4)|safe }}
+    {{ plot_script|indent(4)|safe }}
+
+</head>
+
+<form method="GET">
+
+    <ul class="wrapper">
+
+        <li class="form-row">
+
+            <div>{{ plot_div|indent(4)|safe }}</div>
+
+            <div class="flex-container">
+
+                <!-- Minimum Read Count controls: -->
+                <label for="raw_rd_count" class="flex-items"> <b> Minimum Raw Read Count </b> </label>
+                <input type="range" class="flex-items" value={{ raw_rd_count }} min="0" max={{ max_raw_rd_count }} step="1"
+                       oninput="this.nextElementSibling.value = this.value" id="raw_rd_count" name="raw_rd_count" onchange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ raw_rd_count_label }} min="0" max={{ max_raw_rd_count }} step="1"
+                       oninput="this.nextElementSibling.value = this.value" id="raw_rd_count_label" name="raw_rd_count_label" onchange="this.form.submit()">
+                <label> <br/> <br/> </label>
+
+                <!-- Minimum Linear Coverage controls: -->
+                <label for="min_linear_cov" class="flex-items"> <b> Minimum Linear Coverage </b> </label>
+                <input type="range" class="flex-items" value={{ min_linear_cov }} min="0" max={{ max_linear_cov }} step="1"
+                       oninput="this.nextElementSibling.value = this.value" id="min_linear_cov" name="min_linear_cov" onChange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ min_linear_cov_label }} min="0" max={{ max_linear_cov }} step="1"
+                       oninput="this.nextElementSibling.value = this.value" id="min_linear_cov_label" name="min_linear_cov_label" onChange="this.form.submit()">
+                <label> <br/> <br/> </label>
+
+                <!-- Minimum Score controls: -->
+                <label for="min_score" class="flex-items"> <b> Minimum Score </b> </label>
+                <input type="range" class="flex-items" value={{ min_score }} min="0" max={{ max_score }} step="0.001"
+                       oninput="this.nextElementSibling.value = this.value" id="min_score" name="min_score" onChange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ min_score_label }} min="0" max={{ max_score }} step="0.001"
+                       oninput="this.nextElementSibling.value = this.value" id="min_score_label" name="min_score_label" onChange="this.form.submit()">
+                <label> <br/> <br/> </label>
+
+                <!-- Minimum Normalized Read Count controls: -->
+                <label for="min_norm_rd_cnt_combo" class="flex-items"> <b> Minimum Normalized & Combined Read Count </b> </label>
+                <input type="range" class="flex-items" value={{ min_norm_rd_cnt_combo }} min="0" max={{ max_norm_rd_cnt_combo }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="min_norm_rd_cnt_combo" name="min_norm_rd_cnt_combo" onChange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ min_norm_rd_cnt_combo_label }} min="0" max={{ max_norm_rd_cnt_combo }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="min_norm_rd_cnt_combo_label" name="min_norm_rd_cnt_combo_label" onChange="this.form.submit()">
+                <label> <br/> <br/> </label>
+
+                <!-- Minimum Depth of Coverage controls: -->
+                <label for="min_depth_cov" class="flex-items"> <b> Minimum Depth-of-Coverage </b> </label>
+                <input type="range" class="flex-items" value={{ min_depth_cov }} min="0" max={{ max_depth_cov }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="min_depth_cov" name="min_depth_cov" onChange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ min_depth_cov_label }} min="0" max={{ max_depth_cov }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="min_depth_cov_label" name="min_depth_cov_label" onChange="this.form.submit()">
+                <label> <br/> <br/> </label>
+
+                <!-- Minimum Depth of Coverage by rank controls: -->
+                <label for="rankspec_min_depth_cov" class="flex-items"> <b> Minimum Rank-Specific Depth-of-Coverage </b> </label>
+                <input type="range" class="flex-items" value={{ rankspec_min_depth_cov }} min="0" max={{ rankspec_max_depth_cov }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="rankspec_min_depth_cov" name="rankspec_min_depth_cov" onChange="this.form.submit()">
+                <input type="number" class="flex-items" value={{ rankspec_min_depth_cov_label }} min="0" max={{ rankspec_max_depth_cov }} step="0.01"
+                       oninput="this.nextElementSibling.value = this.value" id="rankspec_min_depth_cov_label" name="rankspec_min_depth_cov_label" onChange="this.form.submit()">
+
+                <!-- Allow user to select a strain for the scaledown plot, from those currently in subset of data: -->
+                <div class="form-group">
+                    <label for="scaledown_dropdown" class="form-label mt-4" name="scaledown_dropdown"><b> Select Strain: Depth Scaledown Plot </b> </label>
+                    <br/>
+                    <select class="form-select" id="scaledown_dropdown" name="scaledown_dropdown" onChange="this.form.submit()">
+                        {% for x in strain_list %}
+                            <option name={{ x }}> {{ x }} </option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <!-- Allow user to change pathogenic status of graphed taxa with radio buttons: -->
+                <label> <br/> <b> Pathogenicity </b> <br/> </label>
+
+                <div className="form-check">
+
+                    <input type="radio" name="pathogenic" value="Pathogen" id="patho"
+                           onChange={this.handleOptionChange}
+                           className="form-check-input" />
+                    <label class="form-check-label" for="patho"> Pathogenic </label>
+
+                </div>
+
+                <div className="form-check">
+
+                    <input type="radio" name="pathogenic" value="No" id="non_patho"
+                           onChange={this.handleOptionChange}
+                           className="form-check-input" />
+                    <label class="form-check-label" for="non_patho"> Non-Pathogenic </label>
+
+                </div>
+
+                <!-- Allow user to change which taxonomic ranks will appear with radio buttons: -->
+                <label> <br/> <b> Rank Level </b> <br/> </label>
+
+                <div className="form-check">
+
+                    <input type="radio" name="rank" value="genus" id="genus"
+                           onChange={this.handleOptionChange}
+                           className="form-check-input" />
+                    <label class="form-check-label" for="genus"> Genus-Level </label>
+
+                </div>
+
+                <div className="form-check">
+
+                    <input type="radio"  name="rank" value="species" id="species"
+                           onChange={this.handleOptionChange}
+                           className="form-check-input" />
+                    <label class="form-check-label" for="species"> Species-Level </label>
+
+                </div>
+
+                <div className="form-check">
+
+                    <input type="radio"  name="rank" value="strain" id="strain"
+                           onChange={this.handleOptionChange}
+                           className="form-check-input" />
+                    <label class="form-check-label" for="strain"> Strain-Level </label>
+
+                </div>
+
+                <!-- Allow user to change which parameter appears on the y-axis with a dropdown menu: -->
+                <div class="form-group">
+
+                    <label for="y-axis-parameter" class="form-label mt-4" name="y-axis-parameter"><b> Select Y-Axis Parameter: </b> </label> <br/>
+
+                    <select class="form-select" id="y-axis-parameter" name="y-axis-parameter">
+
+                        {% for x in y_param_list %}
+                            <option name={{ x }}> {{ x }} </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Allow user to change which parameter appears on the color-axis with a dropdown menu: -->
+                <div class="form-group">
+
+                    <label for="color-axis-parameter" class="form-label mt-4" name="color-axis-parameter"><b> Select Color Parameter: </b> </label> <br/>
+
+                    <select class="form-select" id="y-axis-parameter" name="color-axis-parameter">
+
+                        {% for x in color_param_list %}
+                            <option name={{ x }}> {{ x }} </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <!-- Allow user to change which parameter is used for glyph size with a dropdown menu: -->
+                <div class="form-group">
+
+                    <label for="size-parameter" class="form-label mt-4" name="size-parameter"><b> Select Size Parameter: </b> </label> <br/>
+
+                    <select class="form-select" id="size-parameter" name="size-parameter">
+
+                        {% for x in size_param_list %}
+                            <option name={{ x }}> {{ x }} </option>
+                        {% endfor %}
+
+                    </select>
+
+                </div>
+
+                <label> <br/> <br/> </label>
+
+                <button type="submit" class="btn btn-primary"> Regenerate Plot with Applied Filters </button>
+
+            </div>
+
+            </div>
+
+        </li>
+
+    </ul>
+
+</form>
+
+</html>

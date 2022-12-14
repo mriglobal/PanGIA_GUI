@@ -1,0 +1,56 @@
+{% extends "one_column.html" %}
+{% block app_styles %}{% endblock %}
+{% block app_main_content %}
+<div class="p-5">
+
+    {% include "include/messages.html" %}
+
+    <ul class="nav nav-tabs mb-3">
+        <li class="nav-item"><a class="nav-link" href="/item/{{ item.id }}">Fastq Information</a></li>
+        <li class="nav-item"><a class="nav-link active" href="/item/{{ item.id }}?p=results">Results</a></li>
+    </ul>
+
+    <div class="card-header bg-ngreen shadow">
+        <div class="float-right"><a href="{{ url_for('main.project_page', proj_slug=item.category.slug) }}">Back to {{ item.category.name }} project</a></div>
+        <h3>PanGIA Results</h3>
+    </div>
+    <div class="card-deck">
+        <div class="card my-2 shadow">
+            <div class="card-header">Results Info</div>
+
+            <table class="table shadow-none border-0">
+                <tr>
+                    <td>Run Name:</td>
+                    <td>{{ results.name }}</td>
+                </tr>
+                <tr>
+                    <td>Description:</td>
+                    <td>{{ results.description }}</td>
+                </tr>
+                <tr>
+                    <td>Result Location:</td>
+                    <td>{{ tsv_file.path }}</td>
+                </tr>
+                <tr>
+                    <td>Run Type:</td>
+                    <td>{{ results.results_type }}</td>
+                </tr>
+            </table>
+
+            <div class="card-header">
+                Streamlit Visualization
+            </div>
+            <div>
+                <iframe id="streamlitVis"
+                    title="streamlitVis"
+                    width="100%"
+                    height="1000"
+                    src="http://localhost:8501?tsv={{ results.path }}">
+                </iframe>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
+{% block app_more_scripts %}{% endblock %}

@@ -1,0 +1,43 @@
+<div class="card-footer">
+                <div class="float-right"><div class="float-right">
+                    {% if tsv_html != 'empty' %}
+                    <a href="#" class="btn btn-primary" style="cursor:pointer;" onclick="window.open('/pangia_vis/{{ results.id }}', 'vis_{{ results.id }}', 'height=800,width=1200')"><i class="fas fa-poll"></i> PanGIA Visualization</a>
+                    {% endif %}
+                </div></div>
+                <small class="text-muted">Created on <strong>{% for c in results.results_date.strftime('%Y-%m-%d %H:%M') %}{{ c }}{% endfor %}</strong> by <strong>{{ results.user.fname }} {{ results.user.lname }}</strong></small>
+            </div>
+        </div>
+    </div>
+
+    <div class="card-deck">
+        <div class="card mb-2 shadow">
+            <div class="card-header">
+                Results
+            </div>
+            {% if tsv_html != 'empty' %}
+                {{ tsv_html }}
+
+            <div class="card-footer text-right">
+                <div><a href="{{ url_for('main.results_download', r_id=r_id) }}?dtsv=t" class="btn btn-primary">Download Results</a></div>
+            </div>
+            {% else %}
+                <div class="p-4">
+                    <p>There were no results returned within your criteria. </p>
+                    <p>Try running the file(s) again with lower PanGIA settings cuttoffs.</p>
+                    <p>You can also select the checkbox "Display All" which will remove all cutoffs.</p>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="card-deck">
+        <div class="card mb-2 shadow">
+            <div class="card-header">
+                PanGIA Log
+            </div>
+            <div class="card-body" style="height:200px; overflow: scroll;">
+                <pre>{{ log_text }}</pre>
+            </div>
+            <div class="card-footer text-right">
+                <div><a href={{ url_for('main.results_download', r_id=r_id) }}?dlog=t" class="btn btn-primary">Download Logs</a></div>
+            </div>

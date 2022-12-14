@@ -1,0 +1,13 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+logs/
+.idea
+app_pycache
+_pycache_
+/app/_pycache_
+/app/auth/_pycache_
+/app/errors/_pycache_
+/app/main/_pycache_
+.idea
