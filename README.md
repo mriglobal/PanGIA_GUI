@@ -22,7 +22,7 @@ cd ../../
 * Install Docker. See docker instructions for your OS (https://docs.docker.com/engine/install/)
 * Build the docker images for PanGIA. You should currently be in the "PanGIA_GUI" main folder.
 ```
-DOCKER_BUILDKIT=1 docker-compose up --build
+DOCKER_BUILDKIT=1 docker compose up --build
 ```
 * Go to localhost:5000 in your web browser.
 * Create an admin user with default setup checked
