@@ -7,7 +7,25 @@ Gus Thomas
 
 ![*pangia logo*](gui/images_gui/pangia_logo.png)
 
-## **Your Guide to the PanGIA GUI**
+## **QUICK INSTALLATION**
+* Download the pangia gui and downlad database files
+```
+git clone https://github.com/mriglobal/PanGIA_GUI.git && mkdir PanGIA_GUI/PanGIA/database && cd PanGIA_GUI/PanGIA/database
+wget http://pangia1.0.s3.amazonaws.com/pangia_database.tar.gz && tar -xvf pangia_database.tar.gz && rm pangia_database.tar.gz
+cd ../../
+```
+* Install Docker. See docker instructions for your OS (https://docs.docker.com/engine/install/)
+* Build the docker images for PanGIA. You should currently be in the "PanGIA_GUI" main folder.
+```
+DOCKER_BUILDKIT=1 docker-compose up --build
+```
+* Go to localhost:5000 in your web browser.
+* Create an admin user with default setup checked
+* Click on Settings in the left navigation. Then go to Projects in the top tabs.
+* On this page create your first Project to add fastq/fasta files to upload to. Name and slug are required.
+* Navigate to the project you created in the left nav, upload a fastq or fasta file and hit the Run PanGIA button.
+* To shut down the service press ctr + C in the terminal
+* To restart the service where you left off, open a terminal, cd to the PanGIA_GUI directory, type `docker compose up`
 
 ## **Table of Contents**
 
@@ -183,7 +201,7 @@ cases where the job queue is stuck. Bugfix pending.**
     4.2.4**](#section-424-projects) for more details about Projects.
 
 4.  On the command line at `/pangia_flask_gui_docker` use command:
-    `DOCKER_BUILDKIT=1 docker-compose up --build`. Please wait while the
+    `DOCKER_BUILDKIT=1 docker compose up --build`. Please wait while the
     required Docker images are pulled from Docker Hub, and the `conda`
     environments are constructed. This may take a few minutes, but
     subsequently launching the service will take seconds. [**Section
