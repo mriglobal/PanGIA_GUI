@@ -9,21 +9,21 @@ Gus Thomas
 
 ## **QUICK INSTALLATION**
 * Open a terminal and navigate to the directory location you'd like to download this code.
-* Download the pangia gui and database files.
+* Download the pangia gui.
 ```
-git clone https://github.com/mriglobal/PanGIA_GUI.git && mkdir PanGIA_GUI/PanGIA/database && cd PanGIA_GUI/PanGIA/database
-```
-```
-wget http://pangia1.0.s3.amazonaws.com/pangia_database.tar.gz && tar -xvf pangia_database.tar.gz && rm pangia_database.tar.gz
-```
-```
-cd ../../
+git clone https://github.com/mriglobal/PanGIA_GUI.git && cd PanGIA_GUI
 ```
 * Install Docker. See docker instructions for your OS (https://docs.docker.com/engine/install/)
 * Build the docker images for PanGIA. You should currently be in the "PanGIA_GUI" main folder.
 ```
 DOCKER_BUILDKIT=1 docker compose up --build
 ```
+* In the terminal, close the docker compose using ctr + C
+* Download database (assuming you are in PanGIA_GUI folder)
+```
+mkdir PanGIA/database && cd PanGIA/database && wget http://pangia1.0.s3.amazonaws.com/pangia_database.tar.gz && tar -xvf pangia_database.tar.gz && rm pangia_database.tar.gz && cd ../../
+```
+* Start the PanGIA GUI with `docker compose up`
 * Go to localhost:5000 in your web browser.
 * Create an admin user with default setup checked
 * Click on Settings in the left navigation. Then go to Projects in the top tabs.
