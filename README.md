@@ -12,7 +12,11 @@ Gus Thomas
 * Download the pangia gui and database files.
 ```
 git clone https://github.com/mriglobal/PanGIA_GUI.git && mkdir PanGIA_GUI/PanGIA/database && cd PanGIA_GUI/PanGIA/database
+```
+```
 wget http://pangia1.0.s3.amazonaws.com/pangia_database.tar.gz && tar -xvf pangia_database.tar.gz && rm pangia_database.tar.gz
+```
+```
 cd ../../
 ```
 * Install Docker. See docker instructions for your OS (https://docs.docker.com/engine/install/)
