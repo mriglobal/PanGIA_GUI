@@ -8,7 +8,8 @@ Gus Thomas
 ![*pangia logo*](gui/images_gui/pangia_logo.png)
 
 ## **QUICK INSTALLATION**
-* Download the pangia gui and downlad database files
+* Open a terminal and navigate to the directory location you'd like to download this code.
+* Download the pangia gui and database files.
 ```
 git clone https://github.com/mriglobal/PanGIA_GUI.git && mkdir PanGIA_GUI/PanGIA/database && cd PanGIA_GUI/PanGIA/database
 wget http://pangia1.0.s3.amazonaws.com/pangia_database.tar.gz && tar -xvf pangia_database.tar.gz && rm pangia_database.tar.gz
