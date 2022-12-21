@@ -20,9 +20,6 @@ min_depth,0.01
 min_rs_depth,0.001
 pathogen_discovery,False
 display_all,True
-run_annoy,False
-run_tmark,False
-run_dt,False
 pangia_dir,/gui_flask/PanGIA/
 pangia_db,/gui_flask/PanGIA/database/
 threads,4
