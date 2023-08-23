@@ -17,6 +17,15 @@
                 Use real Real-Time PanGIA as you are producing sequences with Guppy to analyze results as you produce them.<br>
                 Enter the output folder for Guppy fastqs below and they will be run in batches until you stop the real time process.
             </p>
+            <div class="warning">
+              <p>
+                The Docker version can not access your computer filesystem. Real time files need to be pushed to a sub folder where you are running the docker.
+                <br>
+                For example: if you git cloned to /home/Documents/PanGIA_GUI you could make a folder /home/Documents/PanGIA_GUI/realtime and have guppy produce fastqs to this directory.
+                <br>
+                For docker you would also need to prepend your file location with "/gui_flask/". In the example above "/gui_flask/realtime" would be associated with "/home/Documents/PanGIA_GUI/realtime"
+              </p>
+            </div>
         </div>
 
         <table class="table table-striped shadow-none border-0 mb-0">

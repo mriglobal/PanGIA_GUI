@@ -16,9 +16,12 @@
 
     {% if tsv_file != '' %}
 
-        <p>{{tsv_file}}</p>
-        <p>{{log_file}}</p>
-        <p>{{fastp_file}}</p>
+    <iframe id="streamlitVis"
+        title="streamlitVis"
+        width="100%"
+        height="1000"
+        src="http://localhost:8501?tsv={{ results.path }}">
+    </iframe>
 
     {% else %}
         <div class="card-deck">

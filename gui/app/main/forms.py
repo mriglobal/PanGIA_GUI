@@ -245,7 +245,7 @@ class StartPanGIARun(FlaskForm):
 class StartRealTime(FlaskForm):
     runname = StringField('Run Name', validators=[DataRequired()])
     description = StringField('Description')
-    fastq_dir = StringField('Fastq Directory', validators=[InputRequired()])
+    fastq_dir = StringField('Fastq Directory', default="/gui_flask/", validators=[InputRequired()])
     # output_dir = StringField('Output Directory', validators=[InputRequired()])
     project = SelectField('Project')
 

@@ -827,6 +827,7 @@ def real_time_processing(task_id):
     t = Task.query.get(task_id)
 
     if t.complete == False:
+
         options = ast.literal_eval(t.options)
 
         run_bokeh = True
@@ -836,17 +837,13 @@ def real_time_processing(task_id):
         tsv_file, log_file, fastp_file = '','',''
 
         try:
-            # Make sure there is a result and make a Bokeh plot
+            # Make sure there is a result and make a plot
             check_db = Results.query.filter_by(id=options['results_id']).count()
             result = Results.query.get(options['results_id'])
             for file in os.scandir(result.path):
                 if '.report.tsv' in Path(file).name:
                     tsv_file = Path(file).absolute()
                     tsv_length = len(pd.read_table(tsv_file))
-                if 'pangia.log' in Path(file).name:
-                    log_file = Path(file).absolute()
-                if 'fastp.html' in Path(file).name:
-                    fastp_file = Path(file).absolute()
 
         except:
             run_bokeh = False
@@ -858,21 +855,22 @@ def real_time_processing(task_id):
 
         # Found this task and tsv has results
         if run_bokeh != False:
+
             return render_template('pangia/real_time_processing_test.html',
+            title='Results',
             task=t,
             tsv_file = tsv_file,
-            log_file = log_file,
-            fastp_file = fastp_file,
-            title='Results')
+            results = result
+            )
 
         # Empty tsv
         else:
             return render_template('pangia/real_time_processing_test.html',
+            title='Results',
             task=t,
             tsv_file = '',
-            log_file = '',
-            fastp_file = '',
-            title='Results')
+            results = ''
+            )
 
     # Process Finished
     else:
@@ -1105,7 +1103,7 @@ def action_realtime():
     current_user.launch_task('run_real_time', '{}'.format(request.form.get('description')), pangia_settings)
     db.session.commit()
 
-    # flash(Markup('Started a new PanGIA run for {}. See progress on <a href="{}">PanGIA results</a> page.'.format(Path(i1.item_path).name, url_for('main.pangia'))), 'success')
+    #flash(Markup('Started a new PanGIA run for {}. See progress on <a href="{}">PanGIA results</a> page.'.format(Path(i1.item_path).name, url_for('main.pangia'))), 'success')
     sleep = time.sleep(3)
     return redirect(url_for('main.pangia'))
 
