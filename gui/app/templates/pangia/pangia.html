@@ -78,7 +78,7 @@
                 <td>{% for x in r.items %}{{ x.name }}<br>{% endfor %}</td>
                 <td>{% for c in r.results_date.strftime('%Y-%m-%d %H:%M') %}{{ c }}{% endfor %}</td>
                 <td>{{ r.user.fname }} {{ r.user.lname }}</td>
-                <td><a href="{{ url_for('main.item', item_id=r.items[0].id) }}?p=results&id={{ r.id }}" class="btn btn-primary"><i class="fas fa-poll"></i> View Results</a></td>
+                <td><a href="{{ url_for('main.item', item_id=r.items[0].id) }}?p=results&id={{ r.id }}" target="_blank" class="btn btn-primary"><i class="fas fa-poll"></i> View Results</a></td>
             <tr>
             {% endfor %}
         </table>
