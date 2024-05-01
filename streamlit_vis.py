@@ -12,9 +12,10 @@ from bokeh.plotting import figure
 from bokeh.models import ColumnDataSource, HoverTool, Div, FactorRange, Range1d, TapTool, ColorBar, CDSView
 from bokeh.palettes import Spectral11, Turbo256
 import textwrap
+import warnings
 
 
-
+warnings.filterwarnings("ignore", category=DeprecationWarning)
 st.set_page_config(layout="wide")
 
 ###
@@ -41,6 +42,7 @@ log_file = ''
 scaledown_files = []
 df = pd.DataFrame()
 params = st.experimental_get_query_params()
+#params = st.query_params
 pangia_filepath = params['tsv'][0]
 pangia_output = []
 pievalue_list = []
@@ -90,18 +92,18 @@ if tsv_file is not None:
     df = df.round({'TAXID': 2})
 
     # Now, change all keys to be a bit more reasonable sounding/looking:
-    df.rename(columns={'LEVEL': 'Level', 'NAME': 'Taxa', 'TAXID': 'Tax-ID', 'READ_COUNT': 'Raw Read Count',
-                       'READ_COUNT_RNR': 'Reference-Normalized Read Count', 'LINEAR_COV': 'Linear Coverage',
-                       'DEPTH_COV': 'Depth of Coverage', 'DEPTH_COV_NR': 'Reference-Normalized Depth of Coverage',
-                       'RS_DEPTH_COV_NR': 'Reference-Normalized Rank-Specific Depth of Coverage', 'PATHOGEN': 'Pathogenicity',
-                       'SCORE': 'Score', 'REL_ABUNDANCE': 'Relative Abundance', 'ABUNDANCE': 'Abundance',
-                       'TOTAL_BP_MISMATCH': 'Bases Mismatched', 'NOTE': 'Additional Notes', 'RPKM': 'Reads Per Kilobase Million',
-                       'PRI_READ_COUNT': 'Primary Alignment Read Count', 'TOL_RS_READ_CNT': 'Rank-Specific Read Count',
-                       'TOL_RS_RNR': 'Rank-Specific Reference-Normalized Read Count', 'TOL_GENOME_SIZE': 'Origin Genome Length',
-                       'LINEAR_LENGTH': 'Read Length', 'TOTAL_BP_MAPPED': 'Bases Mapped',
-                       'RS_DEPTH_COV': 'Rank-Specific Depth of Coverage', 'TOL_NS_READ_CNT': 'Non-Specific Read Count',
-                       'TOL_NS_RNR': 'Non-Specific Reference-Normalized Read Count', 'FLAG': 'Flag',
-                       'READ_COUNT_RSNB': 'Reference/Identity-Normalized Rank-Specific Read Count',
+    df.rename(columns={'LEVEL': 'Level', 'NAME': 'Taxa', 'TAXID': 'TAXID', 'READ_COUNT': 'READ_COUNT',
+                       'READ_COUNT_RNR': 'READ_COUNT_RNR', 'LINEAR_COV': 'LINEAR_COV',
+                       'DEPTH_COV': 'DEPTH_COV', 'DEPTH_COV_NR': 'DEPTH_COV_NR',
+                       'RS_DEPTH_COV_NR': 'RS_DEPTH_COV_NR', 'PATHOGEN': 'Pathogenicity',
+                       'SCORE': 'Score', 'REL_ABUNDANCE': 'REL_ABUNDANCE', 'ABUNDANCE': 'Abundance',
+                       'TOTAL_BP_MISMATCH': 'TOTAL_BP_MISMATCH', 'NOTE': 'NOTE', 'RPKM': 'RPKM',
+                       'PRI_READ_COUNT': 'PRI_READ_COUNT', 'TOL_RS_READ_CNT': 'TOL_RS_READ_CNT',
+                       'TOL_RS_RNR': 'TOL_RS_RNR', 'TOL_GENOME_SIZE': 'TOL_GENOME_SIZE',
+                       'LINEAR_LENGTH': 'LINEAR_LENGTH', 'TOTAL_BP_MAPPED': 'TOTAL_BP_MAPPED',
+                       'RS_DEPTH_COV': 'RS_DEPTH_COV', 'TOL_NS_READ_CNT': 'TOL_NS_READ_CNT',
+                       'TOL_NS_RNR': 'TOL_NS_RNR', 'FLAG': 'Flag',
+                       'READ_COUNT_RSNB': 'READ_COUNT_RSNB',
 
                        'STR': 'Strain Read Count', 'SPE': 'Species Read Count', 'GEN': 'Genus Read Count', 'FAM': 'Family Read Count',
                        'ORD': 'Order Read Count', 'CLA': 'Clade Read Count', 'PHY': 'Phylum Read Count', 'SK': 'Superkingdom Read Count',
@@ -137,7 +139,7 @@ if tsv_file is not None:
                        'SK_ri': 'Superkingdom Read-Mapping Identity Read Count',
                        'ROOT_ri': 'Root Read-Mapping Identity Read Count', 'HOST': 'Host Organism',
                        'DISEASE':'Diseases Caused', 'SCORE_UNIQ': 'Overall Uniqueness Score',
-                       'SCORE_BG': 'Input vs. Background Score', 'SCORE_UNIQ_CUR_LVL': 'Genome Uniqueness Score'
+                       'SCORE_BG': 'SCORE_BG', 'SCORE_UNIQ_CUR_LVL': 'SCORE_UNIQ_CUR_LVL'
                        }, inplace=True)
 
 
@@ -257,21 +259,18 @@ def parseLog(path):
 def define_tooltips():
     hoverlist = []
     hover_graph = HoverTool(tooltips=[
-        ("Name", "@Name"),
-        ("Tax-ID", "@Tax-ID{0.00}"),
+        ("Name", "@Taxa"),
+        ("Tax-ID", "@TAXID{0}"),
         ("Score", "@Score{0.00}"),
-        ("Linear Coverage", "@Linear Coverage{0,0.00}"),
-        ("Depth-of-Coverage", "@Depth-of-Coverage{0,0.00}"),
-        ("Normalized Rank-Specific Depth-of-Coverage (RSNR)", "@Normalized Rank-Specific Depth-of-Coverage{0,0.00}"),
-        ("Relative Abundance", "@Relative Abundance{0,0.00}"),
-        ("Raw Read Count", "@Raw Read Count{0,0}"),
-        ("Reference-Normalized Read Count", "@Reference-Normalized Read Count{0,0.00}"),
-        ("Normalized Rank-Specific Read Count)", "@Normalized Rank-Specific Read Count{0,0.00}"),
-        ("Primary Read", "@Primary Read{0,0}"),
-        ("RPKM", "@RPKM{0,0.00}"),
-        ("Score (Unique)", "@Score (Unique){0.00}"),
-        ("Score (Background)", "@Score (Background){0.00}"),
-        ("Genome Size (bp)", "@Genome Size (bp){0,0}"),
+        #("Linear Coverage", "@LINEAR_COV"),
+        #("Depth-of-Coverage", "@DEPTH_COV"),
+        #("Normalized Rank-Specific Depth-of-Coverage (RSNR)", "@RS_DEPTH_COV_NR"),
+        ("Relative Abundance", "@REL_ABUNDANCE{0.00}"),
+        ("Raw Read Count", "@READ_COUNT{0,0}"),
+        ("Reference-Normalized Read Count", "@READ_COUNT_RNR"),
+        #("Normalized Rank-Specific Read Count)", "@READ_COUNT_RSNB"),
+        #("Score (Unique)", "@SCORE_UNIQ"),
+        #("Score (Background)", "@SCORE_BG"),
         ("Pathogenicity", "@Pathogenicity"),
     ],
         mode='vline'
@@ -354,7 +353,7 @@ with st.sidebar:
     #                              ['Score', 'Relative Abundance'], index=0, help="Adjustment of which normalized variable represents glyph size.")
 
     selected_x_var = 'Taxa'
-    selected_y_var = 'Reference-Normalized Read Count'
+    selected_y_var = 'READ_COUNT_RNR'
     selected_color_var = 'Score'
     size_param = 'Score'
 
@@ -371,8 +370,8 @@ with st.sidebar:
 
     st.markdown("""---""")
     slider_min_score = st.slider("Filter by score:", 0.0, 1.0, value=((min(df["Score"]), max(df["Score"]))))
-    slider_norm_rd_cnt = st.slider("Filter by normalized read count:", float(1), float(max(df["Reference-Normalized Read Count"])),
-        value=((max(df["Reference-Normalized Read Count"])*0.02, max((df["Reference-Normalized Read Count"])))))
+    slider_norm_rd_cnt = st.slider("Filter by normalized read count:", float(1), float(max(df["READ_COUNT_RNR"])),
+        value=((max(df["READ_COUNT_RNR"])*0.02, max((df["READ_COUNT_RNR"])))))
 
     if select_rank_phylum:
         phylum_check = 'phylum'
@@ -389,19 +388,19 @@ with st.sidebar:
         non_pathogen_check = 'Non-Pathogen'
 
     #if select_rpkm == False:
-    df = df.drop(columns=['Reads Per Kilobase Million'])
+    df = df.drop(columns=['RPKM'])
     #if select_note == False:
-    df = df.drop(columns=['Additional Notes'])
+    df = df.drop(columns=['NOTE'])
     #if select_rsnb == False:
-    df = df.drop(columns=['Reference/Identity-Normalized Rank-Specific Read Count'])
+    df = df.drop(columns=['READ_COUNT_RSNB'])
     #if select_lin_cov == False:
-    df = df.drop(columns=['Linear Coverage'])
+    df = df.drop(columns=['LINEAR_COV'])
     #if select_depth_cov == False:
-    df = df.drop(columns=['Depth of Coverage'])
+    df = df.drop(columns=['DEPTH_COV'])
     #if select_dep_cov_nr == False:
-    df = df.drop(columns=['Reference-Normalized Depth of Coverage'])
+    df = df.drop(columns=['DEPTH_COV_NR'])
     #if select_rs_dep_cov_nr == False:
-    df = df.drop(columns=['Reference-Normalized Rank-Specific Depth of Coverage'])
+    df = df.drop(columns=['RS_DEPTH_COV_NR'])
 
     # checkbox filters:
     df = df[df['Level'].isin([phylum_check, genus_check, species_check])]
@@ -411,14 +410,14 @@ with st.sidebar:
     df = df[df['Score'] >= slider_min_score[0]]
     df = df[df['Score'] <= slider_min_score[1]]
 
-    df = df[df['Reference-Normalized Read Count'] >= slider_norm_rd_cnt[0]]
-    df = df[df['Reference-Normalized Read Count'] <= slider_norm_rd_cnt[1]]
+    df = df[df['READ_COUNT_RNR'] >= slider_norm_rd_cnt[0]]
+    df = df[df['READ_COUNT_RNR'] <= slider_norm_rd_cnt[1]]
 
     st.markdown("""---""")
     select_scaledown = st.selectbox('Select a strain in the current view:', df.loc[df['Level'] == 'strain', 'Taxa'], index=0)
 
     try:
-        sd_strain = df.loc[df['Taxa'] == select_scaledown, 'Tax-ID'].iloc[0]
+        sd_strain = df.loc[df['Taxa'] == select_scaledown, 'TAXID'].iloc[0]
         print(sd_strain)
         if str(sd_strain).split('.')[-1] == '0':
             sd_strain = str(sd_strain).split('.')[0]
@@ -430,7 +429,7 @@ with st.sidebar:
 
 # Filtered and sortable (by clicking on columns) dataframe:
 print('Click on any column to filter the dataframe!')
-df = df.sort_values(by=["Level", "Taxa", "Score", "Reference-Normalized Read Count"], ascending=True)
+df = df.sort_values(by=["Level", "Taxa", "Score", "READ_COUNT_RNR"], ascending=True)
 
     ###
     ##### BSAT Information is not currently included in depth-scaledown plots!
@@ -488,8 +487,8 @@ pieInReadsDS.data = dict(
 
 # "Pathos" chart - information comes from PanGIA .tsv:
 info = {}
-info['Pathogen'] = df.loc[df.Pathogenicity == "Pathogen", "Primary Alignment Read Count"].sum()
-info['Not pathogen'] = df.loc[:, "Primary Alignment Read Count"].sum() - info['Pathogen']
+info['Pathogen'] = df.loc[df.Pathogenicity == "Pathogen", "PRI_READ_COUNT"].sum()
+info['Not pathogen'] = df.loc[:, "PRI_READ_COUNT"].sum() - info['Pathogen']
 
 pievalue_list = genPieValues(info)
 
@@ -513,7 +512,7 @@ if "Flag" in df:
         else:
             name = flag
 
-        info[name] = df.loc[df.Flag == flag, "Primary Alignment Read Count"].sum()
+        info[name] = df.loc[df.Flag == flag, "PRI_READ_COUNT"].sum()
 
     pievalue_list = genPieValues(info)
     pieFlagDS.data = dict(
@@ -605,7 +604,7 @@ csv = convert_df(df)
 st.download_button(label = "Download filtered view as a CSV", data = csv, file_name="test_name.csv", mime='text/csv')
 
 source = ColumnDataSource()
-df = df.drop_duplicates(subset=["Tax-ID"], keep='first')
+df = df.drop_duplicates(subset=["TAXID"], keep='first')
 dict_df = df.to_dict(orient='list')
 source.data = dict_df
 
@@ -656,7 +655,7 @@ if select_scaledown == None:
 
 else:
 
-    sd_taxid = df.loc[df['Taxa'] == select_scaledown, 'Tax-ID'].iloc[0]
+    sd_taxid = df.loc[df['Taxa'] == select_scaledown, 'TAXID'].iloc[0]
 
     if str(sd_taxid).split('.')[-1] == '0':
         sd_taxid = str(sd_strain).split('.')[0]
