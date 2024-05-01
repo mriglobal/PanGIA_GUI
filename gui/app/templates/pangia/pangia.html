@@ -45,7 +45,7 @@
                         <a href="{{ url_for('main.pangia_processing', task_id=q.id) }}" class="btn btn-primary mr-4"><i class="far fa-eye"></i></a>
                         <a href="{{ url_for('main.kill_job', task_id=q.id) }}" class="btn btn-danger btn-muted"><i class="fas fa-trash-alt"></i></a>
                         {% elif q.task_type == 'run_real_time' %}
-                        <a href="{{ url_for('main.real_time_processing', task_id=q.id) }}" class="btn btn-primary">Real Time Results</a>
+                        <a href="{{ url_for('main.real_time_processing', task_id=q.id) }}" target="_blank" class="btn btn-primary">Real Time Results</a>
                         {% endif %}
                     </td>
                     {% else %}
